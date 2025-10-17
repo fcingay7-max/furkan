@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Yavrum affet beni</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #fceef1;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      flex-direction: column;
+      text-align: center;
+      overflow: hidden;
+    }
+
+    .container {
+      background-color: white;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+      width: 90%;
+      max-width: 500px;
+    }
+
+    h1 {
+      font-size: 24px;
+      color: #e83e8c;
+      margin-bottom: 10px;
+    }
+
+    p {
+      font-size: 16px;
+      margin-bottom: 20px;
+    }
+
+    .buttons {
+      display: flex;
+      justify-content: space-around;
+      gap: 15px;
+    }
+
+    .button {
+      padding: 15px 30px;
+      font-size: 16px;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    #btnYes {
+      background-color: #28a745;
+      color: white;
+    }
+
+    #btnNo {
+      background-color: #dc3545;
+      color: white;
+    }
+
+    #btnYes:hover {
+      background-color: #218838;
+    }
+
+    #btnNo:hover {
+      background-color: #c82333;
+    }
+
+    .slider-section {
+      display: none;
+      margin-top: 20px;
+      width: 100%;
+    }
+
+    .slider-title {
+      font-size: 20px;
+      margin-bottom: 15px;
+      color: #e83e8c;
+    }
+
+    .slider {
+      position: relative;
+    }
+
+    .slider img {
+      width: 100%;
+      border-radius: 10px;
+      max-height: 400px;
+      object-fit: cover;
+      animation: zoomIn 1s ease-in-out;
+    }
+
+    .caption {
+      margin-top: 10px;
+      font-size: 16px;
+      color: #444;
+    }
+
+    .caption span.first-letter {
+      color: #e83e8c;
+      font-weight: bold;
+      font-size: 18px;
+    }
+
+    @keyframes zoomIn {
+      0% {
+        transform: scale(0.8);
+        opacity: 0;
+      }
+      100% {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+
+    audio {
+      display: none;
+    }
+
+    @media (max-width: 600px) {
+      h1 {
+        font-size: 20px;
+      }
+      p {
+        font-size: 14px;
+      }
+      .button {
+        font-size: 14px;
+        padding: 12px 20px;
+      }
+      .slider-title {
+        font-size: 18px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>Yavrum AFFET BENİ 💌</h1>
+    <p>Bu birkaç kareyle ve kelimeyle seni tekrar gülümsetebilirsem ne mutlu bana... Affeder misin?</p>
+
+    <div class="buttons">
+      <button id="btnNo" class="button">Hayır</button>
+      <button id="btnYes" class="button">Evet</button>
+    </div>
+
+    <div class="slider-section" id="sliderSection">
+      <div class="slider-title">💖 Bir daha kırgınlık yaşamayalım 💖</div>
+      <div class="slider">
+        <img id="sliderImage" src="" alt="Anılarımız" />
+        <div class="caption" id="sliderCaption"></div>
+      </div>
+    </div>
+
+    <audio id="bgMusic" autoplay loop>
+      <source src="music.mp3" type="audio/mpeg">
+      Tarayıcınız müziği desteklemiyor.
+    </audio>
+  </div>
+
+  <script>
+    const btnNo = document.getElementById("btnNo");
+    const btnYes = document.getElementById("btnYes");
+    const sliderSection = document.getElementById("sliderSection");
+    const sliderImage = document.getElementById("sliderImage");
+    const sliderCaption = document.getElementById("sliderCaption");
+    const bgMusic = document.getElementById("bgMusic");
+
+    let noClickCount = 0;
+    let currentIndex = 0;
+    let sliderInterval;
+
+    const photos = [
+      { src: "1.jpg", caption: "<span class='first-letter'>H</span>er zaman seni düşündüm." },
+      { src: "2.jpg", caption: "<span class='first-letter'>A</span>cı verdi sana kırgınlığım, biliyorum." },
+      { src: "3.jpg", caption: "<span class='first-letter'>F</span>akat kalbim hep seninleydi." },
+      { src: "4.jpg", caption: "<span class='first-letter'>İ</span>çimde sana karşı hep sevgi vardı." },
+      { src: "5.jpg", caption: "<span class='first-letter'>Z</span>amanla her şey iyileşsin istiyorum." },
+      { src: "6.jpg", caption: "<span class='first-letter'>E</span>lini tutmak, gözlerine bakmak istiyorum." }
+    ];
+
+    function showSlide(index) {
+      sliderImage.src = photos[index].src;
+      sliderCaption.innerHTML = photos[index].caption;
+    }
+
+    function startSlider() {
+      showSlide(currentIndex);
+      sliderInterval = setInterval(() => {
+        currentIndex = (currentIndex + 1) % photos.length;
+        showSlide(currentIndex);
+      }, 3000); // 3 saniye
+    }
+
+    btnNo.addEventListener("click", () => {
+      noClickCount++;
+      const newSize = 16 + noClickCount * 4;
+      btnYes.style.fontSize = `${newSize}px`;
+      btnYes.style.padding = `${10 + noClickCount * 2}px ${20 + noClickCount * 4}px`;
+      if (newSize > 50) {
+        btnYes.style.fontSize = '50px';
+        btnYes.style.padding = '30px 60px';
+      }
+    });
+
+    btnYes.addEventListener("click", () => {
+      document.querySelector(".buttons").style.display = "none";
+      sliderSection.style.display = "block";
+      startSlider();
+      bgMusic.play().catch(() => {
+        console.warn("Müzik otomatik oynatılamadı.");
+      });
+    });
+  </script>
+</body>
+</html>
